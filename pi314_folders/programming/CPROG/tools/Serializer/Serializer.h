@@ -26,6 +26,13 @@
 #include <stdexcept>
 #include "type_traits_helper.h"
 
+#if defined(_MSC_VER) && _MSC_VER < 1600 // if Visual Studio before 2010
+typedef int int32_t;
+typedef unsigned int uint32_t;
+#else
+#include <stdint.h>
+#endif
+
 namespace Serialator{
 
 class Serializer;  // Forward declaration
@@ -59,7 +66,7 @@ public:
 		if(mType==INIT){
 			vec.clear();
 		}else{
-			int size;
+			uint32_t size;
 			size = vec.size();  // gets vector size (only meaningful if writing)
 			(*this) & size;     // reads or writes vector size
 			vec.resize(size);   // resizes vector to fit (only meaningful if reading)
@@ -158,12 +165,12 @@ public:
 	// Override this method to change version number.
 	// This number is automatically written and read from stream
 	//   and gets passed into archive method.
-	virtual int getStructVersion() { return 0; } // default version is 0
+	virtual int32_t getStructVersion() { return 0; } // default version is 0
 
 protected:
 	
 	// This method should be implemented in descendant class
-	virtual void archive(Archive& ar, int structVersion) =0;
+	virtual void archive(Archive& ar, int32_t structVersion) =0;
 
 	// Allow Archive to access protected methods
 	friend class Archive;
