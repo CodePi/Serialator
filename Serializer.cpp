@@ -44,7 +44,7 @@ public:
 
 // operator& implementation for serializing and deserializing strings
 Archive& Archive::operator&(string& var){
-	int size;
+	uint32_t size;
 
 	switch(mType){
 	case INIT:
@@ -94,7 +94,7 @@ Archive& Archive::operator&(string& var){
 
 // operator& for serializing and deserializing descendants of Serializer
 Archive& Archive::operator& (Serializer& ser){
-	int version = ser.getStructVersion();
+	int32_t version = ser.getStructVersion();
 	if(mType!=INIT) *this & version;  // read or write version number (if not init)
 	ser.archive(*this, version);
 	return *this;
