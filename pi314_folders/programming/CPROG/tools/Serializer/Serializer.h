@@ -47,12 +47,9 @@ public:
 	enum ArchiveType{INIT,READ_BIN,WRITE_BIN,READ_TEXT,WRITE_TEXT,SERIAL_SIZE_BIN};
 
 	// Constructors
-	Archive(ArchiveType type)                         
-		: mType(type), mpIStream(NULL), mpOStream(NULL), mSerializedSize(0){}
-	Archive(ArchiveType type, std::istream& istream) 
-		: mType(type), mpIStream(&istream), mpOStream(NULL), mSerializedSize(0){}
-	Archive(ArchiveType type, std::ostream& ostream) 
-		: mType(type), mpIStream(NULL), mpOStream(&ostream), mSerializedSize(0){}
+	Archive(ArchiveType type);
+	Archive(ArchiveType type, std::istream& istream);
+	Archive(ArchiveType type, std::ostream& ostream); 
 	
 	// operator& for serializing and deserializing strings
 	Archive& operator& (std::string& var);
@@ -120,7 +117,9 @@ public:
 			mp.clear();
 			break;
 
-		default: throw runtime_error("map operator& switch hit default.  Code error"); break
+		default: 
+			throw runtime_error("map operator& switch hit default.  Code error"); 
+			break;
 
 		}
 
@@ -160,7 +159,9 @@ public:
 				mSerializedSize += sizeof(var);
 				break;
 
-			default: throw runtime_error("\"other\" operator& switch hit default.  Code error"); break;
+			default: 
+				throw runtime_error("\"other\" operator& switch hit default.  Code error"); 
+				break;
 
 			};
 			return *this;
