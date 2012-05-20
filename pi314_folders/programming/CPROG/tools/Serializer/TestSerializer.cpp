@@ -113,7 +113,7 @@ int main(){
 		mct4.textDeserialize(buff);
 		if(!(mc==mct4)) cerr << "mct4 not equal\n";
 		if(buff.size()!=serialTextSize) cerr << "buff.size() should match serialTextSize\n";
-
+		
 		// test text char* serialization
 		MyClass mct5;
 		int maxSize = 10000;
