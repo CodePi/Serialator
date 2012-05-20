@@ -119,7 +119,11 @@ public:
 		case INIT:
 			mp.clear();
 			break;
+
+		default: throw runtime_error("map operator& switch hit default.  Code error"); break
+
 		}
+
 		return *this;
 	}
 
@@ -155,6 +159,8 @@ public:
 			case SERIAL_SIZE_BIN:
 				mSerializedSize += sizeof(var);
 				break;
+
+			default: throw runtime_error("\"other\" operator& switch hit default.  Code error"); break;
 
 			};
 			return *this;
