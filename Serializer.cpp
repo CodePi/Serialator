@@ -171,23 +171,33 @@ void Serializer::binDeserialize(const char* blob, int blobSize){
 // Serialize/deserialize to/from vector<char> //
 ////////////////////////////////////////////////
 
+// same as vec.data() but compatible with VS2008
+static char* vecptr(vector<char>& vec){
+	return vec.empty() ? NULL : &vec[0];
+}
+
+// same as vec.data() but compatible with VS2008
+static const char* vecptr(const vector<char>& vec){
+	return vec.empty() ? NULL : &vec[0];
+}
+
 void Serializer::textSerialize(vector<char>& blob){
 	stringstream ss;                      
 	textSerialize(ss);           // serialize to stream
 	int size = ss.tellp();       // get size of stream
 	blob.resize(size);           // resize blob
-	ss.read(blob.data(), size);  // copy stream to buffer
+	ss.read(vecptr(blob), size);  // copy stream to buffer
 }
 
 void Serializer::textDeserialize(const vector<char>& blob){
-	textDeserialize(blob.data(), blob.size());
+	textDeserialize(vecptr(blob), blob.size());
 }
 
 void Serializer::binSerialize(vector<char>& blob){
 	Archive ar(Archive::SERIAL_SIZE_BIN);   // setup size calculating archive
 	ar & *this;                             // calculate size
 	blob.resize(ar.mSerializedSize);        // resize blob to calculated size
-	binSerialize(blob.data(), blob.size()); // serialize to blob
+	binSerialize(vecptr(blob), blob.size()); // serialize to blob
 }
 
 void Serializer::binDeserialize(const vector<char>& blob){
