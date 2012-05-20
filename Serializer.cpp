@@ -42,6 +42,28 @@ public:
 ///////////////////////////////////////////////////////////////////////////////////////////
 // Archive method implementations
 
+// constructors
+Archive::Archive(ArchiveType type)                         
+	: mType(type), mpIStream(NULL), mpOStream(NULL), mSerializedSize(0){
+		if(type!=INIT && type!=SERIAL_SIZE_BIN){
+			throw runtime_error("Init/size Archive constructor is not compatible with type");
+		}
+}
+
+Archive::Archive(ArchiveType type, istream& istream) 
+	: mType(type), mpIStream(&istream), mpOStream(NULL), mSerializedSize(0){
+		if(type!=READ_BIN && type!=READ_TEXT){
+			throw runtime_error("Read Archive constructor is not compatible with type");
+		}
+}
+
+Archive::Archive(ArchiveType type, ostream& ostream) 
+	: mType(type), mpIStream(NULL), mpOStream(&ostream), mSerializedSize(0){
+		if(type!=WRITE_BIN && type!=WRITE_TEXT){
+			throw runtime_error("Write Archive constructor is not compatible with type");
+		}
+}
+
 // operator& implementation for serializing and deserializing strings
 Archive& Archive::operator&(string& var){
 	uint32_t size;
@@ -88,7 +110,9 @@ Archive& Archive::operator&(string& var){
 		mSerializedSize += sizeof(int) + var.size();
 		break;
 
-	default: throw runtime_error("string operator& switch hit default.  Code error"); break;
+	default: 
+		throw runtime_error("string operator& switch hit default.  Code error"); 
+		break;
 
 	};
 	return *this;
