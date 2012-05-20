@@ -79,14 +79,14 @@ public:
 		return *this;
 	}
 
-	// operator& for serializing and deserializing pairs of any supported type
+	// operator& for serializing and deserializing pairs of any supported types
 	template <typename T1, typename T2>
 	Archive& operator& (std::pair<T1,T2>& pair){
 		(*this) & pair.first & pair.second;
 		return *this;
 	}
 
-	// operator& for serializing and deserializing map of any supported type
+	// operator& for serializing and deserializing maps of any supported types
 	template <typename T1, typename T2>
 	Archive& operator& (std::map<T1,T2>& mp){
 		uint32_t size;
