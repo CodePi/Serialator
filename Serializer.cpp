@@ -88,6 +88,8 @@ Archive& Archive::operator&(string& var){
 		mSerializedSize += sizeof(int) + var.size();
 		break;
 
+	default: throw runtime_error("string operator& switch hit default.  Code error"); break;
+
 	};
 	return *this;
 }
