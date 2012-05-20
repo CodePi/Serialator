@@ -109,7 +109,9 @@ public:
 			size = mp.size();
 			(*this) & size;
 			for(map<T1,T2>::iterator i=mp.begin(); i!=mp.end(); i++){
-				T1* first = const_cast<T1*>(&i->first); // need const castoff to prevent compiler error
+				// Need const castoff to prevent compiler error.
+				// Value won't actually change, but compiler doesn't realize it.
+				T1* first = const_cast<T1*>(&i->first); 
 				(*this) & *first & i->second;
 			}
 			break;
