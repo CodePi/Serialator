@@ -71,10 +71,17 @@ public:
 			(*this) & size;     // reads or writes vector size
 			vec.resize(size);   // resizes vector to fit (only meaningful if reading)
 			// TODO: bulk read/write if possible
-			for(int i=0;i<size;i++){              // read or write each element to stream
+			for(uint32_t i=0;i<size;i++){              // read or write each element to stream
 				(*this) & vec[i];
 			}
 		}
+		return *this;
+	}
+
+	// operator& for serializing and deserializing pairs of any supported type
+	template <typename T1, typename T2>
+	Archive& operator& (std::pair<T1,T2>& pair){
+		(*this) & pair.first & pair.second;
 		return *this;
 	}
 
