@@ -23,6 +23,7 @@
 #include <string>
 #include <iostream>
 #include <vector>
+#include <map>
 #include <stdexcept>
 #include "type_traits_helper.h"
 
@@ -82,6 +83,41 @@ public:
 	template <typename T1, typename T2>
 	Archive& operator& (std::pair<T1,T2>& pair){
 		(*this) & pair.first & pair.second;
+		return *this;
+	}
+
+	// operator& for serializing and deserializing map of any supported type
+	template <typename T1, typename T2>
+	Archive& operator& (std::map<T1,T2>& mp){
+		uint32_t size;
+
+		switch(mType){
+		case READ_BIN:
+		case READ_TEXT:
+			mp.clear();
+			(*this) & size;
+			for(uint32_t i=0; i<size; i++){
+				pair<T1,T2> pair;
+				(*this) & pair;
+				mp.insert(pair);
+			}
+			break;
+
+		case WRITE_BIN:
+		case WRITE_TEXT:
+		case SERIAL_SIZE_BIN:
+			size = mp.size();
+			(*this) & size;
+			for(map<T1,T2>::iterator i=mp.begin(); i!=mp.end(); i++){
+				T1* first = const_cast<T1*>(&i->first); // need const castoff to prevent compiler error
+				(*this) & *first & i->second;
+			}
+			break;
+
+		case INIT:
+			mp.clear();
+			break;
+		}
 		return *this;
 	}
 
