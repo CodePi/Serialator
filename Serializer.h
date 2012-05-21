@@ -94,7 +94,7 @@ public:
 			mp.clear();
 			(*this) & size;
 			for(uint32_t i=0; i<size; i++){
-				pair<T1,T2> pair;
+			        std::pair<T1,T2> pair;
 				(*this) & pair;
 				mp.insert(pair);
 			}
@@ -105,7 +105,8 @@ public:
 		case SERIAL_SIZE_BIN:
 			size = mp.size();
 			(*this) & size;
-			for(map<T1,T2>::iterator i=mp.begin(); i!=mp.end(); i++){
+			std::map<T1,T2>::iterator i;
+			for(i=mp.begin(); i!=mp.end(); i++){
 				// Need const castoff to prevent compiler error.
 				// Value won't actually change, but compiler doesn't realize it.
 				T1* first = const_cast<T1*>(&i->first); 
@@ -118,7 +119,7 @@ public:
 			break;
 
 		default: 
-			throw runtime_error("map operator& switch hit default.  Code error"); 
+		  throw std::runtime_error("map operator& switch hit default.  Code error"); 
 			break;
 
 		}
@@ -160,7 +161,7 @@ public:
 				break;
 
 			default: 
-				throw runtime_error("\"other\" operator& switch hit default.  Code error"); 
+			  throw std::runtime_error("\"other\" operator& switch hit default.  Code error"); 
 				break;
 
 			};
