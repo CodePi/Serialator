@@ -69,7 +69,7 @@ public:
 			(*this) & size;     // reads or writes vector size
 			vec.resize(size);   // resizes vector to fit (only meaningful if reading)
 			// TODO: bulk read/write if possible
-			for(uint32_t i=0;i<size;i++){              // read or write each element to stream
+			for(uint32_t i=0;i<size;i++){   // read or write each element to stream
 				(*this) & vec[i];
 			}
 		}
@@ -94,7 +94,7 @@ public:
 			mp.clear();
 			(*this) & size;
 			for(uint32_t i=0; i<size; i++){
-			        std::pair<T1,T2> pair;
+				std::pair<T1,T2> pair;
 				(*this) & pair;
 				mp.insert(pair);
 			}
@@ -118,7 +118,7 @@ public:
 			break;
 
 		default: 
-		  throw std::runtime_error("map operator& switch hit default.  Code error"); 
+			throw std::runtime_error("map operator& switch hit default.  Code error"); 
 			break;
 
 		}
@@ -160,7 +160,7 @@ public:
 				break;
 
 			default: 
-			  throw std::runtime_error("\"other\" operator& switch hit default.  Code error"); 
+				throw std::runtime_error("\"other\" operator& switch hit default.  Code error"); 
 				break;
 
 			};
