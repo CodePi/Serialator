@@ -47,9 +47,9 @@ public:
 	enum ArchiveType{INIT,READ_BIN,WRITE_BIN,READ_TEXT,WRITE_TEXT,SERIAL_SIZE_BIN};
 
 	// Constructors
-	Archive(ArchiveType type);
-	Archive(ArchiveType type, std::istream& istream);
-	Archive(ArchiveType type, std::ostream& ostream); 
+	Archive(ArchiveType type);                        // For INIT or SERIAL_SIZE_BIN
+	Archive(ArchiveType type, std::istream& istream); // For READ_BIN or READ_TEXT
+	Archive(ArchiveType type, std::ostream& ostream); // For WRITE_BIN or WRITE_TEXT
 	
 	// operator& for serializing and deserializing strings
 	Archive& operator& (std::string& var);
