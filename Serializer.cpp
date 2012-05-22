@@ -74,40 +74,36 @@ Archive& Archive::operator&(string& var){
 		break;
 
 	case READ_BIN: 
-		mpIStream->read((char*)&size, sizeof(size));   // output size to stream
-		if(mpIStream->fail()) throw runtime_error("READ_BIN: string size read error");
-		var.resize(size);
-		mpIStream->read((char*)var.c_str(), size); // output string to stream
+		(*this) & size;   // read string size from stream
+		var.resize(size); // resize string
+		mpIStream->read((char*)var.c_str(), size); // read string from stream
 		if(mpIStream->fail()) throw runtime_error("READ_BIN: string read error");
 		break; 
 
 	case WRITE_BIN: 
 		size = var.size();
-		mpOStream->write((char*)&size, sizeof(size));   // output size to stream
-		mpOStream->write(var.c_str(), size); // output string to stream
+		(*this) & size;   // write string size to stream
+		mpOStream->write(var.c_str(), size); // write string to stream
 		if(mpOStream->fail()) throw runtime_error("WRITE_BIN: string write error");
 		break; 
 
 	case READ_TEXT:
-		*mpIStream >> size;  // read string size
-		mpIStream->ignore(); // skip past space
-		if(mpIStream->fail()) throw std::runtime_error("READ_TEXT: string size read error");
-		var.resize(size);
-		mpIStream->read(&var[0], size);  // read string
+		(*this) & size;   // read string size from stream
+		var.resize(size); // resize string
+		mpIStream->read((char*)var.c_str(), size);  // read string
 		mpIStream->ignore(); // skip past space
 		if(mpIStream->fail()) throw runtime_error("READ_TEXT: string read error");
 		break;
 
 	case WRITE_TEXT:
 		size = var.size();
-		*mpOStream << size << " "; // output string size and space
-		if(mpOStream->fail()) throw std::runtime_error("WRITE_TEXT vector: vector size write error");
+		(*this) & size;   // write string size to stream
 		*mpOStream << var << " ";  // output string and space
 		if(mpOStream->fail()) throw runtime_error("WRITE_TEXT: string read error");
 		break;
 
 	case SERIAL_SIZE_BIN:
-		mSerializedSize += sizeof(int) + var.size();
+		mSerializedSize += sizeof(size) + var.size();
 		break;
 
 	default: 
