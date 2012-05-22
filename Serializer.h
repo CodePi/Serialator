@@ -227,6 +227,9 @@ public:
 	//   and gets passed into archive method.
 	virtual int32_t getStructVersion() { return 0; } // default version is 0
 
+	//virtualized destructor for proper inheritance
+	virtual ~Serializer(){}   
+
 protected:
 	
 	// This method should be implemented in descendant class
