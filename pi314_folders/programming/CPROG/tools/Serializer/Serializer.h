@@ -44,7 +44,14 @@ class Serializer;  // Forward declaration
 //   This class shouldn't be instantiated directly, only used within Serializer::archive method 
 class Archive{
 public:
-	enum ArchiveType{INIT,READ_BIN,WRITE_BIN,READ_TEXT,WRITE_TEXT,SERIAL_SIZE_BIN};
+	enum ArchiveType{
+		INIT,            // Initialize all elements to type default
+		READ_BIN,        // Read from binary stream
+		WRITE_BIN,       // Write to binary stream
+		READ_TEXT,       // Read from text stream
+		WRITE_TEXT,      // Write to text stream
+		SERIAL_SIZE_BIN  // Calculate binary serialized size
+	};
 
 	// Constructors
 	Archive(ArchiveType type);                        // For INIT or SERIAL_SIZE_BIN
@@ -153,6 +160,7 @@ public:
 
 			case WRITE_TEXT:  
 				*mpOStream << var << " ";
+				if(mpOStream->fail()) throw std::runtime_error("WRITE_TEXT: \"other\" write error");
 				break;
 
 			case SERIAL_SIZE_BIN:
@@ -174,7 +182,7 @@ protected:
 	std::ostream* mpOStream;
 	// Archive type (see enumeration above)
 	ArchiveType mType;  
-	// Size of serialized data (used by SERIAL_SIZE_BIN&SERIAL_SIZE_TEXT)
+	// Size of serialized data (used by SERIAL_SIZE_BIN)
 	int mSerializedSize;
 	// friend
 	friend class Serializer;
