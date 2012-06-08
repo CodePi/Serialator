@@ -22,12 +22,12 @@ public:
 	int a,b,c;
 	vector<int>v;
 	string str;
-	pair<int,float> pair;
+	pair<int,float> pr;
 	map<string,int> mp;
 	Nested n;
 protected:
 	void archive(Archive& ar, int version){
-		ar & a & b & c & v & str & pair & mp & n; 
+		ar & a & b & c & v & str & pr & mp & n; 
 	}
 };
 
@@ -37,7 +37,7 @@ bool operator==(Nested&a, Nested& b){
 
 bool operator==(MyClass&a, MyClass& b){
 	return a.a==b.a && a.b==b.b && a.c==b.c 
-		&& a.v==b.v && a.str==b.str && a.pair==b.pair 
+		&& a.v==b.v && a.str==b.str && a.pr==b.pr 
 		&& a.mp==b.mp && a.n==b.n;
 }
 
@@ -50,8 +50,8 @@ int main(){
 	mc.v.push_back(11);
 	mc.v.push_back(12);
 	mc.v.push_back(13);
-	mc.pair.first = 10;
-	mc.pair.second = 10.1;
+	mc.pr.first = 10;
+	mc.pr.second = 10.1;
 	mc.mp["abc"] = 1;
 	mc.mp["def"] = 2;
 	mc.n.x = 1;
