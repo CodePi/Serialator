@@ -185,7 +185,7 @@ protected:
 			for(uint32_t i=0; i<size; i++){
 				typename Container::value_type val;
 				(*this) & val;
-				container.insert(container.end(), move(val));
+				container.insert(container.end(), std::move(val));
 			}
 			break;
 
