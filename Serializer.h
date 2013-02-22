@@ -25,7 +25,7 @@
 #include <vector>
 #include <map>
 #include <stdexcept>
-#include "type_traits_helper.h"
+#include <type_traits>
 
 #if defined(_MSC_VER) && _MSC_VER < 1600 // if Visual Studio before 2010
 typedef int int32_t;
@@ -136,7 +136,7 @@ public:
 	// operator& for serializing and deserializing basic types (int, float, etc...).
 	// The enable_if is to prevent template from matching descendants of Serializer
 	template <typename T>
-	typename TTHelper::enable_if<!TTHelper::is_serializer<T>::value,Archive&>::type
+	typename std::enable_if<std::is_arithmetic<T>::value, Archive&>::type
 		operator& (T& var){
 			switch(mType){
 			case INIT:
