@@ -24,6 +24,9 @@
 #include <iostream>
 #include <vector>
 #include <map>
+#include <set>
+#include <list>
+#include <deque>
 #include <stdexcept>
 #include <type_traits>
 
@@ -67,69 +70,44 @@ public:
 	// operator& for serializing and deserializing vectors of any supported type
 	template <typename T>
 	Archive& operator& (std::vector<T>& vec){
-
-		if(mType==INIT){
-			vec.clear();
-		}else{
-			uint32_t size;
-			size = vec.size();  // gets vector size (only meaningful if writing)
-			(*this) & size;     // reads or writes vector size
-			vec.resize(size);   // resizes vector to fit (only meaningful if reading)
-			// TODO: bulk read/write if possible
-			for(uint32_t i=0;i<size;i++){   // read or write each element to stream
-				(*this) & vec[i];
-			}
-		}
-		return *this;
-	}
-
-	// operator& for serializing and deserializing pairs of any supported types
-	template <typename T1, typename T2>
-	Archive& operator& (std::pair<T1,T2>& pair){
-		(*this) & pair.first & pair.second;
+		containerHelper(vec);
 		return *this;
 	}
 
 	// operator& for serializing and deserializing maps of any supported types
 	template <typename T1, typename T2>
 	Archive& operator& (std::map<T1,T2>& mp){
-		uint32_t size;
+		containerHelper(mp);
+		return *this;
+	}
 
-		switch(mType){
-		case READ_BIN:
-		case READ_TEXT:
-			mp.clear();
-			(*this) & size;
-			for(uint32_t i=0; i<size; i++){
-				std::pair<T1,T2> pair;
-				(*this) & pair;
-				mp.insert(pair);
-			}
-			break;
+	// operator& for serializing and deserializing sets of any supported types
+	template <typename T>
+	Archive& operator& (std::set<T>& s){
+		containerHelper(s);
+		return *this;
+	}
 
-		case WRITE_BIN:
-		case WRITE_TEXT:
-		case SERIAL_SIZE_BIN:
-			size = mp.size();
-			(*this) & size;
-			for(typename std::map<T1,T2>::iterator i=mp.begin(); i!=mp.end(); i++){
-				// Need const castoff to prevent compiler error.
-				// Value won't actually change, but compiler doesn't realize it.
-				T1* first = const_cast<T1*>(&i->first); 
-				(*this) & *first & i->second;
-			}
-			break;
+	// operator& for serializing and deserializing lists of any supported types
+	template <typename T>
+	Archive& operator& (std::list<T>& s){
+		containerHelper(s);
+		return *this;
+	}
 
-		case INIT:
-			mp.clear();
-			break;
+	// operator& for serializing and deserializing deques of any supported types
+	template <typename T>
+	Archive& operator& (std::deque<T>& s){
+		containerHelper(s);
+		return *this;
+	}
 
-		default: 
-			throw std::runtime_error("map operator& switch hit default.  Code error"); 
-			break;
-
-		}
-
+	// operator& for serializing and deserializing pairs of any supported types
+	template <typename T1, typename T2>
+	Archive& operator& (std::pair<T1,T2>& pair){
+		// Need const castoff to prevent compiler error when using std::map
+		// Value won't actually change, but compiler doesn't realize it.
+		(*this) & remove_const(pair.first) & pair.second;
 		return *this;
 	}
 
@@ -186,6 +164,53 @@ protected:
 	int mSerializedSize;
 	// friend
 	friend class Serializer;
+	
+	/// helper function for handling maps and sets
+	/// workaround: map and set value_type contain const this casts off the const
+	template <typename T>
+	static T& remove_const(const T& val){
+		return const_cast<T&>(val);
+	}
+	
+	template <typename Container>
+	void containerHelper(Container& container){
+		uint32_t size;
+
+		switch(mType){
+		case READ_BIN:
+		case READ_TEXT:
+			container.clear();
+			(*this) & size;
+			for(uint32_t i=0; i<size; i++){
+				typename Container::value_type val;
+				(*this) & val;
+				container.insert(container.end(), val);
+			}
+			break;
+
+		case WRITE_BIN:
+		case WRITE_TEXT:
+		case SERIAL_SIZE_BIN:
+			size = container.size();
+			(*this) & size;
+			for(typename Container::iterator i=container.begin(); i!=container.end(); i++){
+				// Need const castoff to prevent compiler error.
+				// Value won't actually change, but compiler doesn't realize it.				
+				(*this) & remove_const(*i);
+			}
+			break;
+
+		case INIT:
+			container.clear();
+			break;
+
+		default: 
+			throw std::runtime_error("containerHelper switch hit default.  Code error"); 
+			break;
+
+		}
+
+	}
 
 };
 
