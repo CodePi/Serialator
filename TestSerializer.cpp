@@ -60,6 +60,15 @@ int main(){
 	mc.mp["def"] = 2;
 	mc.n.x = 1;
 	mc.str = "hello";
+	mc.s.insert(10);
+	mc.s.insert(11);
+	mc.s.insert(12);
+	mc.l.push_back(21);
+	mc.l.push_back(22);
+	mc.l.push_back(23);
+	mc.d.push_back(31);
+	mc.d.push_back(32);
+	mc.d.push_back(33);
 
 	try{
 
@@ -140,6 +149,8 @@ int main(){
 		if(size!=serialTextSize) cerr << "size should match serialTextSize\n";
 		else cout << "Test mct5b passed\n";
 
+
+		cout << serialString << endl;
 	}catch(exception&e){
 		cerr<<e.what()<<endl;
 	}
