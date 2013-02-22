@@ -90,15 +90,15 @@ public:
 
 	// operator& for serializing and deserializing lists of any supported types
 	template <typename T>
-	Archive& operator& (std::list<T>& s){
-		containerHelper(s);
+	Archive& operator& (std::list<T>& l){
+		containerHelper(l);
 		return *this;
 	}
 
 	// operator& for serializing and deserializing deques of any supported types
 	template <typename T>
-	Archive& operator& (std::deque<T>& s){
-		containerHelper(s);
+	Archive& operator& (std::deque<T>& d){
+		containerHelper(d);
 		return *this;
 	}
 
@@ -106,7 +106,8 @@ public:
 	template <typename T1, typename T2>
 	Archive& operator& (std::pair<T1,T2>& pair){
 		// Need const castoff to prevent compiler error when using std::map
-		// Value won't actually change, but compiler doesn't realize it.
+		// Value won't actually change in the cases where it's const, 
+		//   but compiler doesn't realize it.
 		(*this) & remove_const(pair.first) & pair.second;
 		return *this;
 	}
@@ -184,7 +185,7 @@ protected:
 			for(uint32_t i=0; i<size; i++){
 				typename Container::value_type val;
 				(*this) & val;
-				container.insert(container.end(), val);
+				container.insert(container.end(), move(val));
 			}
 			break;
 
