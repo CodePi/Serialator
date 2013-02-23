@@ -28,9 +28,12 @@ public:
 	set<int> s;
 	list<int> l;
 	deque<int> d;
+	enum E { A,B,C } e;
+
 protected:
 	void archive(Archive& ar, int version){
-		ar & a & b & c & v & str & pr & mp & n & s & l & d; 
+		ar & a & b & c & v & str & pr & mp & n & s & l & d;
+		ar & (int&)e; // need to cast enum to int&
 	}
 };
 
@@ -42,7 +45,8 @@ bool operator==(MyClass&a, MyClass& b){
 	return a.a==b.a && a.b==b.b && a.c==b.c 
 		&& a.v==b.v && a.str==b.str && a.pr==b.pr 
 		&& a.mp==b.mp && a.n==b.n
-		&& a.s==b.s && a.l==b.l && a.d==b.d;
+		&& a.s==b.s && a.l==b.l && a.d==b.d
+		&& a.e==a.e;
 }
 
 int main(){
@@ -69,6 +73,7 @@ int main(){
 	mc.d.push_back(31);
 	mc.d.push_back(32);
 	mc.d.push_back(33);
+	mc.e = MyClass::C;
 
 	try{
 
