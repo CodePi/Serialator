@@ -120,15 +120,15 @@ public:
 		else{
 			uint32_t size = arr.size(); // get size (if writing)
 			(*this) & size;             // read or write size
-			if(size > arr.size()) throw runtime_error("operator& array size error");
+			if(size > arr.size()) throw std::runtime_error("operator& array size error");
 
 			if(mType==READ_BIN){
 				mpIStream->read((char*)arr.data(), sizeof(T)*size); // read all data
-				if(mpIStream->fail()) throw std::runtime_error("READ_BIN: \"vector\" read error");
+				if(mpIStream->fail()) throw std::runtime_error("READ_BIN: \"array\" read error");
 
 			}else if(mType==WRITE_BIN){
 				mpOStream->write((char*)arr.data(), sizeof(T)*size);
-				if(mpOStream->fail()) throw std::runtime_error("WRITE_BIN: \"vector\" write error");
+				if(mpOStream->fail()) throw std::runtime_error("WRITE_BIN: \"array\" write error");
 
 			}else if(mType==SERIAL_SIZE_BIN){
 				mSerializedSize += sizeof(T)*size;
@@ -144,12 +144,12 @@ public:
 	// operator& for c++ array not handled above
 	template <typename T, size_t N>
 	typename std::enable_if<!std::is_arithmetic<T>::value, Archive&>::type
-	operator& (std::array<T,N>& vec){
-		if(mType==INIT) vec.fill(T());
+	operator& (std::array<T,N>& arr){
+		if(mType==INIT) arr.fill(T());
 		else{
 			uint32_t size = arr.size(); // get size (if writing)
 			(*this) & size;             // read or write size
-			if(size > arr.size()) throw runtime_error("operator& array size error");
+			if(size > arr.size()) throw std::runtime_error("operator& array size error");
 			// handle each element
 			for(uint32_t i=0;i<size;i++) (*this) & arr[i];
 		}
