@@ -67,11 +67,48 @@ public:
 	// operator& for serializing and deserializing descendants of Serializer
 	Archive& operator& (Serializer& ser);
 
-	// operator& for serializing and deserializing vectors of any supported type
+	// operator& optimized for continuous vectors of numbers
 	template <typename T>
-	Archive& operator& (std::vector<T>& vec){
-		containerHelper(vec);
+	typename std::enable_if<std::is_arithmetic<T>::value, Archive&>::type
+	operator& (std::vector<T>& vec){
+		if(mType==INIT) vec.clear();
+		else{
+			uint32_t size = vec.size(); // get size (if writing)
+			(*this) & size;             // read or write size
+			vec.resize(size);           // resize (if reading)
+
+			if(mType==READ_BIN){
+				mpIStream->read((char*)vec.data(), sizeof(T)*size); // read all data
+				if(mpIStream->fail()) throw std::runtime_error("READ_BIN: \"vector\" read error");
+
+			}else if(mType==WRITE_BIN){
+				mpOStream->write((char*)vec.data(), sizeof(T)*size);
+				if(mpOStream->fail()) throw std::runtime_error("WRITE_BIN: \"vector\" write error");
+
+			}else if(mType==SERIAL_SIZE_BIN){
+				mSerializedSize += sizeof(T)*size;
+				
+			}else{ // READ_TEXT or WRITE_TEXT
+				for(uint32_t i=0;i<size;i++) (*this) & vec[i];
+			}
+		}
+
 		return *this;
+	}
+
+	// operator& for vectors not handled above
+	template <typename T>
+	typename std::enable_if<!std::is_arithmetic<T>::value, Archive&>::type
+	operator& (std::vector<T>& vec){
+		if(mType==INIT) vec.clear();
+		else{
+			uint32_t size = vec.size(); // get size (if writing)
+			(*this) & size;             // read or write size
+			vec.resize(size);           // resize (if reading)
+			// handle each element
+			for(uint32_t i=0;i<size;i++) (*this) & vec[i];
+		}
+		return (*this);
 	}
 
 	// operator& for serializing and deserializing maps of any supported types
