@@ -28,24 +28,25 @@ public:
 	set<int> s;
 	list<int> l;
 	deque<int> d;
+	vector<Nested> vn;	
 	enum E { A,B,C } e;
 
 protected:
 	void archive(Archive& ar, int version){
-		ar & a & b & c & v & str & pr & mp & n & s & l & d;
+		ar & a & b & c & v & str & pr & mp & n & s & l & d & vn ;
 		ar & (int&)e; // need to cast enum to int&
 	}
 };
 
-bool operator==(Nested&a, Nested& b){
+bool operator==(const Nested&a, const Nested& b){
 	return a.x==b.x && a.y==b.y && a.z==b.z;
 }
 
-bool operator==(MyClass&a, MyClass& b){
+bool operator==(const MyClass&a, const MyClass& b){
 	return a.a==b.a && a.b==b.b && a.c==b.c 
 		&& a.v==b.v && a.str==b.str && a.pr==b.pr 
 		&& a.mp==b.mp && a.n==b.n
-		&& a.s==b.s && a.l==b.l && a.d==b.d
+		&& a.s==b.s && a.l==b.l && a.d==b.d && a.vn==b.vn
 		&& a.e==a.e;
 }
 
@@ -59,7 +60,7 @@ int main(){
 	mc.v.push_back(12);
 	mc.v.push_back(13);
 	mc.pr.first = 10;
-	mc.pr.second = 10.1;
+	mc.pr.second = 10.1f;
 	mc.mp["abc"] = 1;
 	mc.mp["def"] = 2;
 	mc.n.x = 1;
@@ -73,6 +74,13 @@ int main(){
 	mc.d.push_back(31);
 	mc.d.push_back(32);
 	mc.d.push_back(33);
+	mc.vn.resize(2);
+	mc.vn[0].x = 91;
+	mc.vn[0].y = 92;
+	mc.vn[0].z = 93;
+	mc.vn[1].x = 94;
+	mc.vn[1].y = 95;
+	mc.vn[1].z = 96;
 	mc.e = MyClass::C;
 
 	try{
@@ -84,7 +92,7 @@ int main(){
 		mc2.binDeserialize(ssb);
 		if(!(mc==mc2)) throw runtime_error("mc2 not equal");
 		else cout << "Test mc2 passed\n";
-		int serialBinSize = ssb.tellp();
+		streampos serialBinSize = ssb.tellp();
 
 		// test binary file serialization
 		MyClass mc3;
@@ -123,7 +131,7 @@ int main(){
 		mct2.textDeserialize(sst);
 		if(!(mc==mct2)) cerr << "mct2 not equal\n";
 		else cout << "Test mct2 passed\n";
-		int serialTextSize = sst.tellp();
+		streampos serialTextSize = sst.tellp();
 	
 		// test text file serialization
 		MyClass mct3;
