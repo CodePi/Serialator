@@ -15,6 +15,10 @@
 // FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER 
 // DEALINGS IN THE SOFTWARE.
 
+// Tested with Visual Studio 2010 
+// Tested with g++ 4.6 & 4.7 with -std=c++11 flag
+// Should work with g++ 4.3 and later with -std=c++0x flag
+
 // TODO:
 // - use catch and rethown to build stack dump on exception
 
