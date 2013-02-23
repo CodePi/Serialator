@@ -29,11 +29,12 @@ public:
 	list<int> l;
 	deque<int> d;
 	vector<Nested> vn;	
+	array<int,5> arr;
 	enum E { A,B,C } e;
 
 protected:
 	void archive(Archive& ar, int version){
-		ar & a & b & c & v & str & pr & mp & n & s & l & d & vn ;
+		ar & a & b & c & v & str & pr & mp & n & s & l & d & vn & arr;
 		ar & (int&)e; // need to cast enum to int&
 	}
 };
@@ -45,8 +46,8 @@ bool operator==(const Nested&a, const Nested& b){
 bool operator==(const MyClass&a, const MyClass& b){
 	return a.a==b.a && a.b==b.b && a.c==b.c 
 		&& a.v==b.v && a.str==b.str && a.pr==b.pr 
-		&& a.mp==b.mp && a.n==b.n
-		&& a.s==b.s && a.l==b.l && a.d==b.d && a.vn==b.vn
+		&& a.mp==b.mp && a.n==b.n && a.s==b.s && a.l==b.l 
+		&& a.d==b.d && a.vn==b.vn && a.arr==b.arr
 		&& a.e==a.e;
 }
 
