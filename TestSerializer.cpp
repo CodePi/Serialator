@@ -119,9 +119,9 @@ int main(){
 		mc5.binDeserialize(buffBin2,maxSizeBin);
 		delete[]buffBin2;
 		if(!(mc==mc5)) cerr << "mc5 not equal\n";
-		else cout << "Test mc5 passed\n";
+		else cout << "Test mc5a passed\n";
 		if(sizeBin!=serialBinSize) cerr << "sizeBin should match serialBinSize\n";
-		else cout << "Test mc5 passed\n";
+		else cout << "Test mc5b passed\n";
 
 		// test text stream serialization
 		stringstream sst;
