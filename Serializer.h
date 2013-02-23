@@ -23,6 +23,7 @@
 #include <string>
 #include <iostream>
 #include <vector>
+#include <array>
 #include <map>
 #include <set>
 #include <list>
@@ -107,6 +108,50 @@ public:
 			vec.resize(size);           // resize (if reading)
 			// handle each element
 			for(uint32_t i=0;i<size;i++) (*this) & vec[i];
+		}
+		return (*this);
+	}
+
+	// operator& optimized for continuous C++ array of numbers
+	template <typename T, size_t N>
+	typename std::enable_if<std::is_arithmetic<T>::value, Archive&>::type
+	operator& (std::array<T,N>& arr){
+		if(mType==INIT) arr.fill(T());
+		else{
+			uint32_t size = arr.size(); // get size (if writing)
+			(*this) & size;             // read or write size
+			if(size > arr.size()) throw runtime_error("operator& array size error");
+
+			if(mType==READ_BIN){
+				mpIStream->read((char*)arr.data(), sizeof(T)*size); // read all data
+				if(mpIStream->fail()) throw std::runtime_error("READ_BIN: \"vector\" read error");
+
+			}else if(mType==WRITE_BIN){
+				mpOStream->write((char*)arr.data(), sizeof(T)*size);
+				if(mpOStream->fail()) throw std::runtime_error("WRITE_BIN: \"vector\" write error");
+
+			}else if(mType==SERIAL_SIZE_BIN){
+				mSerializedSize += sizeof(T)*size;
+				
+			}else{ // READ_TEXT or WRITE_TEXT
+				for(uint32_t i=0;i<size;i++) (*this) & arr[i];
+			}
+		}
+
+		return *this;
+	}
+
+	// operator& for c++ array not handled above
+	template <typename T, size_t N>
+	typename std::enable_if<!std::is_arithmetic<T>::value, Archive&>::type
+	operator& (std::array<T,N>& vec){
+		if(mType==INIT) vec.fill(T());
+		else{
+			uint32_t size = arr.size(); // get size (if writing)
+			(*this) & size;             // read or write size
+			if(size > arr.size()) throw runtime_error("operator& array size error");
+			// handle each element
+			for(uint32_t i=0;i<size;i++) (*this) & arr[i];
 		}
 		return (*this);
 	}
