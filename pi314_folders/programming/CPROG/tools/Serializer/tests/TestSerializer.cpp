@@ -82,6 +82,7 @@ int main(){
 	mc.vn[1].x = 94;
 	mc.vn[1].y = 95;
 	mc.vn[1].z = 96;
+	mc.arr.fill(123);
 	mc.e = MyClass::C;
 
 	try{
