@@ -216,7 +216,8 @@ public:
 			return *this;
 	}
 
-protected:
+private:
+
 	// Pointer to input stream for deserialization (null otherwise)
 	std::istream* mpIStream;
 	// Pointer to output stream for serialization (null otherwise)
@@ -325,9 +326,6 @@ protected:
 
 	// Allow Archive to access protected methods
 	friend class Archive;
-
-	// Allows enable_if in Archive class to work properly
-	typedef void is_serializer;
 
 };
 
