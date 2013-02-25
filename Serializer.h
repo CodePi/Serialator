@@ -72,27 +72,30 @@ public:
 	// operator& for serializing and deserializing descendants of Serializer
 	Archive& operator& (Serializer& ser);
 
-	// operator& optimized for continuous vectors of numbers
+	// operator& for serializing and deserializing vectors
 	template <typename T>
-	typename std::enable_if<std::is_arithmetic<T>::value, Archive&>::type
-	operator& (std::vector<T>& vec){
+	Archive& operator& (std::vector<T>& vec){
 		if(mType==INIT) vec.clear();
 		else{
 			uint32_t size = vec.size(); // get size (if writing)
 			(*this) & size;             // read or write size
 			vec.resize(size);           // resize (if reading)
 
-			if(mType==READ_BIN){
+			// binary read of contiguous values
+			if(mType==READ_BIN && std::is_arithmetic<T>::value){
 				mpIStream->read((char*)vec.data(), sizeof(T)*size); // read all data
 				if(mpIStream->fail()) throw std::runtime_error("READ_BIN: \"vector\" read error");
 
-			}else if(mType==WRITE_BIN){
+			// binary write of contiguous values
+			}else if(mType==WRITE_BIN && std::is_arithmetic<T>::value){
 				mpOStream->write((char*)vec.data(), sizeof(T)*size);
 				if(mpOStream->fail()) throw std::runtime_error("WRITE_BIN: \"vector\" write error");
 
-			}else if(mType==SERIAL_SIZE_BIN){
+			// get binary size of contiguous values
+			}else if(mType==SERIAL_SIZE_BIN && std::is_arithmetic<T>::value){
 				mSerializedSize += sizeof(T)*size;
 				
+			// cases not covered by above (text and non-contiguous)
 			}else{ // READ_TEXT or WRITE_TEXT
 				for(uint32_t i=0;i<size;i++) (*this) & vec[i];
 			}
@@ -101,43 +104,31 @@ public:
 		return *this;
 	}
 
-	// operator& for vectors not handled above
-	template <typename T>
-	typename std::enable_if<!std::is_arithmetic<T>::value, Archive&>::type
-	operator& (std::vector<T>& vec){
-		if(mType==INIT) vec.clear();
-		else{
-			uint32_t size = vec.size(); // get size (if writing)
-			(*this) & size;             // read or write size
-			vec.resize(size);           // resize (if reading)
-			// handle each element
-			for(uint32_t i=0;i<size;i++) (*this) & vec[i];
-		}
-		return (*this);
-	}
-
-	// operator& optimized for continuous C++ array of numbers
+	// operator& for serializing and deserializing std::array
 	template <typename T, size_t N>
-	typename std::enable_if<std::is_arithmetic<T>::value, Archive&>::type
-	operator& (std::array<T,N>& arr){
+	Archive& operator& (std::array<T,N>& arr){
 		if(mType==INIT) arr.fill(T());
 		else{
 			uint32_t size = arr.size(); // get size (if writing)
 			(*this) & size;             // read or write size
 			if(size > arr.size()) throw std::runtime_error("operator& array size error");
 
-			if(mType==READ_BIN){
+			// binary read of contiguous values
+			if(mType==READ_BIN && std::is_arithmetic<T>::value){
 				mpIStream->read((char*)arr.data(), sizeof(T)*size); // read all data
 				if(mpIStream->fail()) throw std::runtime_error("READ_BIN: \"array\" read error");
 
-			}else if(mType==WRITE_BIN){
+			// binary write of contiguous values
+			}else if(mType==WRITE_BIN && std::is_arithmetic<T>::value){
 				mpOStream->write((char*)arr.data(), sizeof(T)*size);
 				if(mpOStream->fail()) throw std::runtime_error("WRITE_BIN: \"array\" write error");
 
-			}else if(mType==SERIAL_SIZE_BIN){
+			// get binary size of contiguous values
+			}else if(mType==SERIAL_SIZE_BIN && std::is_arithmetic<T>::value){
 				mSerializedSize += sizeof(T)*size;
 				
-			}else{ // READ_TEXT or WRITE_TEXT
+			// cases not covered by above (text and non-contiguous)
+			}else{ 
 				for(uint32_t i=0;i<size;i++) (*this) & arr[i];
 			}
 		}

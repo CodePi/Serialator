@@ -139,12 +139,11 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="Serializer.cpp" />
+    <ClCompile Include="..\Serializer.cpp" />
     <ClCompile Include="TestSerializer.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Serializer.h" />
-    <ClInclude Include="type_traits_helper.h" />
+    <ClInclude Include="..\Serializer.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

@@ -2,10 +2,9 @@
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
     <ClCompile Include="TestSerializer.cpp" />
-    <ClCompile Include="Serializer.cpp" />
+    <ClCompile Include="..\Serializer.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Serializer.h" />
-    <ClInclude Include="type_traits_helper.h" />
+    <ClInclude Include="..\Serializer.h" />
   </ItemGroup>
 </Project>
