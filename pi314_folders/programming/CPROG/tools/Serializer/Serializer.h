@@ -136,21 +136,6 @@ public:
 		return *this;
 	}
 
-	// operator& for c++ array not handled above
-	template <typename T, size_t N>
-	typename std::enable_if<!std::is_arithmetic<T>::value, Archive&>::type
-	operator& (std::array<T,N>& arr){
-		if(mType==INIT) arr.fill(T());
-		else{
-			uint32_t size = arr.size(); // get size (if writing)
-			(*this) & size;             // read or write size
-			if(size > arr.size()) throw std::runtime_error("operator& array size error");
-			// handle each element
-			for(uint32_t i=0;i<size;i++) (*this) & arr[i];
-		}
-		return (*this);
-	}
-
 	// operator& for serializing and deserializing maps of any supported types
 	template <typename T1, typename T2>
 	Archive& operator& (std::map<T1,T2>& mp){
