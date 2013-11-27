@@ -83,12 +83,12 @@ public:
 
 			// binary read of contiguous values
 			if(mType==READ_BIN && std::is_arithmetic<T>::value){
-				mpIStream->read((char*)vec.data(), sizeof(T)*size); // read all data
+				if(size>0) mpIStream->read((char*)vec.data(), sizeof(T)*size); // read all data
 				if(mpIStream->fail()) throw std::runtime_error("READ_BIN: \"vector\" read error");
 
 			// binary write of contiguous values
 			}else if(mType==WRITE_BIN && std::is_arithmetic<T>::value){
-				mpOStream->write((char*)vec.data(), sizeof(T)*size);
+				if(size>0) mpOStream->write((char*)vec.data(), sizeof(T)*size);
 				if(mpOStream->fail()) throw std::runtime_error("WRITE_BIN: \"vector\" write error");
 
 			// get binary size of contiguous values
@@ -115,12 +115,12 @@ public:
 
 			// binary read of contiguous values
 			if(mType==READ_BIN && std::is_arithmetic<T>::value){
-				mpIStream->read((char*)arr.data(), sizeof(T)*size); // read all data
+				if(size>0) mpIStream->read((char*)arr.data(), sizeof(T)*size); // read all data
 				if(mpIStream->fail()) throw std::runtime_error("READ_BIN: \"array\" read error");
 
 			// binary write of contiguous values
 			}else if(mType==WRITE_BIN && std::is_arithmetic<T>::value){
-				mpOStream->write((char*)arr.data(), sizeof(T)*size);
+				if(size>0) mpOStream->write((char*)arr.data(), sizeof(T)*size);
 				if(mpOStream->fail()) throw std::runtime_error("WRITE_BIN: \"array\" write error");
 
 			// get binary size of contiguous values

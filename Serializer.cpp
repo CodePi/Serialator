@@ -76,21 +76,21 @@ Archive& Archive::operator&(string& var){
 	case READ_BIN: 
 		(*this) & size;   // read string size from stream
 		var.resize(size); // resize string
-		mpIStream->read((char*)var.c_str(), size); // read string from stream
+		if(size>0) mpIStream->read((char*)var.c_str(), size); // read string from stream
 		if(mpIStream->fail()) throw runtime_error("READ_BIN: string read error");
 		break; 
 
 	case WRITE_BIN: 
 		size = var.size();
 		(*this) & size;   // write string size to stream
-		mpOStream->write(var.c_str(), size); // write string to stream
+		if(size>0) mpOStream->write(var.c_str(), size); // write string to stream
 		if(mpOStream->fail()) throw runtime_error("WRITE_BIN: string write error");
 		break; 
 
 	case READ_TEXT:
 		(*this) & size;   // read string size from stream
 		var.resize(size); // resize string
-		mpIStream->read((char*)var.c_str(), size);  // read string
+		if(size>0) mpIStream->read((char*)var.c_str(), size);  // read string
 		mpIStream->ignore(); // skip past space
 		if(mpIStream->fail()) throw runtime_error("READ_TEXT: string read error");
 		break;
