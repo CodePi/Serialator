@@ -51,6 +51,41 @@ bool operator==(const MyClass&a, const MyClass& b){
 		&& a.e==a.e;
 }
 
+// Method 1 for external struct
+
+struct ExternalStruct{
+  int a,b,c;
+};
+
+struct ExternalStructWrapper : public Serializer{
+  ExternalStructWrapper(const ExternalStruct& ee) : ee(ee) {}
+  ExternalStruct ee;
+private:
+  void archive(Archive& ar, int version){
+    ar & ee.a & ee.b & ee.c;
+  }
+};
+
+// Method 2 for external struct
+
+struct ExternalStruct2{
+  int a,b,c;
+};
+
+Archive& operator& (Archive& ar, ExternalStruct2& e){
+  ar & e.a & e.b & e.c;
+  return ar;
+} 
+
+struct ExternalStructExample : public Serializer{
+  ExternalStruct2 es2;
+  int d,e;
+private:
+  void archive(Archive& ar, int version){
+    ar & es2 & d & e;
+  }
+};
+
 int main(){
 
 	// populate object
@@ -164,8 +199,25 @@ int main(){
 		if(size!=serialTextSize) cerr << "size should match serialTextSize\n";
 		else cout << "Test mct5b passed\n";
 
+		ExternalStruct ee;
+		ee.a = 1;
+		ee.b = 2;
+		ee.c = 3;
+		ExternalStructWrapper eew(ee);
+		eew.textSerialize(cout);
+		cout << endl;
+
+		ExternalStructExample ese;
+		ese.es2.a = 1;
+		ese.es2.b = 2;
+		ese.es2.c = 3;
+		ese.d = 4;
+		ese.e = 5;
+		ese.textSerialize(cout);
+		cout << endl;
 
 		cout << serialString << endl;
+
 	}catch(exception&e){
 		cerr<<e.what()<<endl;
 	}
