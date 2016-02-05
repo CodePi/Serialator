@@ -1,5 +1,5 @@
-TestSerializer : TestSerializer.cpp ../Serializer.cpp ../Serializer.h Makefile
-	g++ TestSerializer.cpp ../Serializer.cpp -o TestSerializer -std=c++0x -I..
+TestSerialator : TestSerialator.cpp ../Serialator.cpp ../Serialator.h Makefile
+	g++ TestSerialator.cpp ../Serialator.cpp -o TestSerialator -std=c++0x -I..
 
 clean: 
-	rm TestSerializer
+	rm TestSerialator

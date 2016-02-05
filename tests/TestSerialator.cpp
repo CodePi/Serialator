@@ -2,12 +2,12 @@
 #include <fstream>
 #include <string>
 #include <assert.h>
-#include "Serializer.h"
+#include "Serialator.h"
 
 using namespace std;
-using namespace Serialator;
+using namespace codepi;
 
-class Nested : public Serializer{
+class Nested : public Serialator{
 public:
 	int x,y,z;
 protected:
@@ -16,7 +16,7 @@ protected:
 	}
 };
 
-class MyClass : public Serializer{
+class MyClass : public Serialator{
 public:
 	MyClass(){initAll();}
 	int a,b,c;
@@ -57,7 +57,7 @@ struct ExternalStruct{
   int a,b,c;
 };
 
-struct ExternalStructWrapper : public Serializer{
+struct ExternalStructWrapper : public Serialator{
   ExternalStructWrapper(const ExternalStruct& ee) : ee(ee) {}
   ExternalStruct ee;
 private:
@@ -77,7 +77,7 @@ Archive& operator& (Archive& ar, ExternalStruct2& e){
   return ar;
 } 
 
-struct ExternalStructExample : public Serializer{
+struct ExternalStructExample : public Serialator{
   ExternalStruct2 es2;
   int d,e;
 private:

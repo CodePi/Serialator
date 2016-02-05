@@ -15,11 +15,11 @@
 // FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER 
 // DEALINGS IN THE SOFTWARE.
 
-#include "Serializer.h"
+#include "Serialator.h"
 #include <fstream>
 #include <sstream>
 
-namespace Serialator{
+namespace codepi{
 
 using namespace std;
 
@@ -114,8 +114,8 @@ Archive& Archive::operator&(string& var){
 	return *this;
 }
 
-// operator& for serializing and deserializing descendants of Serializer
-Archive& Archive::operator& (Serializer& ser){
+// operator& for serializing and deserializing descendants of Serialator
+Archive& Archive::operator& (Serialator& ser){
 	int32_t version = ser.getStructVersion();
 	if(mType!=INIT) *this & version;  // read or write version number (if not init)
 	ser.archive(*this, version);
@@ -126,7 +126,7 @@ Archive& Archive::operator& (Serializer& ser){
 // Serialization method implementations
 
 // init all elements to type default
-void Serializer::initAll(){ 
+void Serialator::initAll(){ 
 	Archive ar(Archive::INIT);
 	ar & *this;
 }
@@ -135,22 +135,22 @@ void Serializer::initAll(){
 // Serialize/deserialize to/from stream //
 //////////////////////////////////////////
 
-void Serializer::textSerialize(std::ostream&os){
+void Serialator::textSerialize(std::ostream&os){
 	Archive ar(Archive::WRITE_TEXT,os);
 	ar & *this;
 }
 
-void Serializer::textDeserialize(std::istream&is){
+void Serialator::textDeserialize(std::istream&is){
 	Archive ar(Archive::READ_TEXT,is);
 	ar & *this;
 }
 
-void Serializer::binSerialize(std::ostream&os){
+void Serialator::binSerialize(std::ostream&os){
 	Archive ar(Archive::WRITE_BIN,os);
 	ar & *this;
 }
 
-void Serializer::binDeserialize(std::istream&is){
+void Serialator::binDeserialize(std::istream&is){
 	Archive ar(Archive::READ_BIN,is);
 	ar & *this;
 }
@@ -159,7 +159,7 @@ void Serializer::binDeserialize(std::istream&is){
 // Serialize/deserialize to/from char* //
 /////////////////////////////////////////
 
-int Serializer::textSerialize(char* blob, int maxBlobSize){
+int Serialator::textSerialize(char* blob, int maxBlobSize){
 	StreambufWrapper sb(blob, maxBlobSize); // create streambuf from blob without copying
 	ostream os(&sb);                        // wrap streambuf in ostream
 	textSerialize(os);                      // serialize to streambuf
@@ -168,20 +168,20 @@ int Serializer::textSerialize(char* blob, int maxBlobSize){
 	return size;                            // return used size
 }
 
-void Serializer::textDeserialize(const char* blob, int blobSize){
+void Serialator::textDeserialize(const char* blob, int blobSize){
 	StreambufWrapper sb((char*)blob, blobSize); // create streambuf from blob without copying
 	istream is(&sb);                            // wrap streambuf in istream
 	textDeserialize(is);                        // deserialize from streambuf
 }
 
-int Serializer::binSerialize(char* blob, int maxBlobSize){
+int Serialator::binSerialize(char* blob, int maxBlobSize){
 	StreambufWrapper sb(blob, maxBlobSize); // create streambuf from blob without copying
 	ostream os(&sb);                        // wrap streambuf in ostream
 	binSerialize(os);                       // serialize to streambuf
 	return sb.getSizeUsed();                // return used size
 }
 
-void Serializer::binDeserialize(const char* blob, int blobSize){
+void Serialator::binDeserialize(const char* blob, int blobSize){
 	StreambufWrapper sb((char*)blob, blobSize); // create streambuf from blob without copying
 	istream is(&sb);                            // wrap streambuf in istream
 	binDeserialize(is);                         // deserialize from streambuf
@@ -201,7 +201,7 @@ static const char* vecptr(const vector<char>& vec){
 	return vec.empty() ? NULL : &vec[0];
 }
 
-void Serializer::textSerialize(vector<char>& blob){
+void Serialator::textSerialize(vector<char>& blob){
 	stringstream ss;                      
 	textSerialize(ss);           // serialize to stream
 	int size = ss.tellp();       // get size of stream
@@ -209,18 +209,18 @@ void Serializer::textSerialize(vector<char>& blob){
 	ss.read(vecptr(blob), size);  // copy stream to buffer
 }
 
-void Serializer::textDeserialize(const vector<char>& blob){
+void Serialator::textDeserialize(const vector<char>& blob){
 	textDeserialize(vecptr(blob), blob.size());
 }
 
-void Serializer::binSerialize(vector<char>& blob){
+void Serialator::binSerialize(vector<char>& blob){
 	Archive ar(Archive::SERIAL_SIZE_BIN);   // setup size calculating archive
 	ar & *this;                             // calculate size
 	blob.resize(ar.mSerializedSize);        // resize blob to calculated size
 	binSerialize(vecptr(blob), blob.size()); // serialize to blob
 }
 
-void Serializer::binDeserialize(const vector<char>& blob){
+void Serialator::binDeserialize(const vector<char>& blob){
 	binDeserialize(blob.data(), blob.size());
 }
 
@@ -228,25 +228,25 @@ void Serializer::binDeserialize(const vector<char>& blob){
 // Serialize/deserialize to/from file   //
 //////////////////////////////////////////
 
-void Serializer::textSerializeFile(const std::string& filename){
+void Serialator::textSerializeFile(const std::string& filename){
 	ofstream ofs(filename.c_str());
 	if(ofs.fail()) throw runtime_error("textSerializeFile: cannot open file");
 	textSerialize(ofs);
 }
 
-void Serializer::textDeserializeFile(const std::string& filename){
+void Serialator::textDeserializeFile(const std::string& filename){
 	ifstream ifs(filename.c_str());
 	if(ifs.fail()) throw runtime_error("textSerializeFile: cannot open file");
 	textDeserialize(ifs);
 }
 
-void Serializer::binSerializeFile(const std::string& filename){
+void Serialator::binSerializeFile(const std::string& filename){
 	ofstream ofs(filename.c_str(), ios::binary);
 	if(ofs.fail()) throw runtime_error("binSerializeFile: cannot open file");
 	binSerialize(ofs);
 }
 
-void Serializer::binDeserializeFile(const std::string& filename){
+void Serialator::binDeserializeFile(const std::string& filename){
 	ifstream ifs(filename.c_str(), ios::binary);
 	if(ifs.fail()) throw runtime_error("binDeserializeFile: cannot open file");
 	binDeserialize(ifs);

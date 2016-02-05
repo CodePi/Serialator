@@ -42,14 +42,14 @@ typedef unsigned int uint32_t;
 #include <stdint.h>
 #endif
 
-namespace Serialator{
+namespace codepi{
 
-class Serializer;  // Forward declaration
+class Serialator;  // Forward declaration
 
 ///////////////////////////////////////////////////////////////////////////////////////////
 // Archive Class
-//   Helper class for Serializer
-//   This class shouldn't be instantiated directly, only used within Serializer::archive method 
+//   Helper class for Serialator
+//   This class shouldn't be instantiated directly, only used within Serialator::archive method 
 class Archive{
 public:
 	enum ArchiveType{
@@ -69,8 +69,8 @@ public:
 	// operator& for serializing and deserializing strings
 	Archive& operator& (std::string& var);
 
-	// operator& for serializing and deserializing descendants of Serializer
-	Archive& operator& (Serializer& ser);
+	// operator& for serializing and deserializing descendants of Serialator
+	Archive& operator& (Serialator& ser);
 
 	// operator& for serializing and deserializing vectors
 	template <typename T>
@@ -175,7 +175,7 @@ public:
 	}
 
 	// operator& for serializing and deserializing basic types (int, float, etc...).
-	// The enable_if is to prevent template from matching descendants of Serializer
+	// The enable_if is to prevent template from matching descendants of Serialator
 	template <typename T>
 	typename std::enable_if<std::is_arithmetic<T>::value, Archive&>::type
 		operator& (T& var){
@@ -227,7 +227,7 @@ private:
 	// Size of serialized data (used by SERIAL_SIZE_BIN)
 	int mSerializedSize;
 	// friend
-	friend class Serializer;
+	friend class Serialator;
 	
 	/// helper function for handling maps and sets
 	/// workaround: map and set value_type contain const this casts off the const
@@ -279,10 +279,10 @@ private:
 };
 
 ///////////////////////////////////////////////////////////////////////////////////////////
-// Serializer class
+// Serialator class
 //   Descendants of this class should implement archive method which is called by all 
 //   of the public methods
-class Serializer{
+class Serialator{
 public:
 	void initAll();                         // init all elements to type default
 	
@@ -317,7 +317,7 @@ public:
 	virtual int32_t getStructVersion() { return 0; } // default version is 0
 
 	//virtualized destructor for proper inheritance
-	virtual ~Serializer(){}   
+	virtual ~Serialator(){}   
 
 protected:
 	

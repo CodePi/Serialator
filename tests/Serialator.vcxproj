@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug|Win32">
@@ -21,7 +21,7 @@
   <PropertyGroup Label="Globals">
     <ProjectGuid>{C9EA60CD-5596-459A-A42E-63E3C233850D}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
-    <RootNamespace>Serializer</RootNamespace>
+    <RootNamespace>Serialator</RootNamespace>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
@@ -141,11 +141,11 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="..\Serializer.cpp" />
-    <ClCompile Include="TestSerializer.cpp" />
+    <ClCompile Include="..\Serialator.cpp" />
+    <ClCompile Include="TestSerialator.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\Serializer.h" />
+    <ClInclude Include="..\Serialator.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
