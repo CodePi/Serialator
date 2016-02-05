@@ -329,4 +329,4 @@ protected:
 
 };
 
-}; //namespace Serialator
+}; //end namespace codepi

@@ -253,4 +253,4 @@ void Serialator::binDeserializeFile(const std::string& filename){
 }
 
 
-}; //namespace Serialator
+}; //end namespace codepi
