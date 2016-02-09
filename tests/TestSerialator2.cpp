@@ -49,7 +49,7 @@ int main(){
   // Serialize to binary file then deserialize
   Struct1 st1d;
   st1.binSerializeFile("test2.bin");
-  st1c.binDeserializeFile("test2.bin");
+  st1d.binDeserializeFile("test2.bin");
 
   // Compare resulting structures
   st1.textSerialize(cout);
@@ -57,5 +57,7 @@ int main(){
   st1b.textSerialize(cout);
   cout << endl;
   st1c.textSerialize(cout);
+  cout << endl;
+  st1d.textSerialize(cout);
   cout << endl;
 }
