@@ -37,7 +37,7 @@ int main(){
   st1.binSerialize(ss);
   st1b.binDeserialize(ss);
 
-  // Serialize to binary buffer then deseerialize
+  // Serialize to binary buffer then deserialize
   Struct1 st1c;
   vector<char> buffer;
   st1.binSerialize(buffer);
