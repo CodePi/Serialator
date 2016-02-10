@@ -26,36 +26,36 @@ protected:
 int main(){
 
   // populate initial structure
-  Struct1 st1;
-  st1.exampleIntValue = 1;
-  st1.exampleString = "an example string";
-  st1.exampleVector = { 1, 2, 3 };
+  Struct1 origStruct;
+  origStruct.exampleIntValue = 1;
+  origStruct.exampleString = "an example string";
+  origStruct.exampleVector = { 1, 2, 3 };
 
   // Serialize to binary stream then deserialize
-  Struct1 st1b;
+  Struct1 structFromStream;
   stringstream ss;
-  st1.binSerialize(ss);
-  st1b.binDeserialize(ss);
+  origStruct.binSerialize(ss);
+  structFromStream.binDeserialize(ss);
 
   // Serialize to binary buffer then deserialize
-  Struct1 st1c;
+  Struct1 structFromVec;
   vector<char> buffer;
-  st1.binSerialize(buffer);
-  st1c.binDeserialize(buffer);
+  origStruct.binSerialize(buffer);
+  structFromVec.binDeserialize(buffer);
 
   // Serialize to binary file then deserialize
-  Struct1 st1d;
-  st1.binSerializeFile("test2.bin");
-  st1d.binDeserializeFile("test2.bin");
+  Struct1 structFromFile;
+  origStruct.binSerializeFile("test2.bin");
+  structFromFile.binDeserializeFile("test2.bin");
 
   // Compare resulting structures
-  st1.textSerialize(cout);
+  origStruct.textSerialize(cout);
   cout << endl;
-  st1b.textSerialize(cout);
+  structFromStream.textSerialize(cout);
   cout << endl;
-  st1c.textSerialize(cout);
+  structFromVec.textSerialize(cout);
   cout << endl;
-  st1d.textSerialize(cout);
+  structFromFile.textSerialize(cout);
   cout << endl;
 }
 ```
