@@ -32,20 +32,20 @@ int main(){
   origStruct.exampleVector = { 1, 2, 3 };
 
   // Serialize to binary stream then deserialize
-  Struct1 structFromStream;
   stringstream ss;
   origStruct.binSerialize(ss);
+  Struct1 structFromStream;
   structFromStream.binDeserialize(ss);
 
   // Serialize to binary buffer then deserialize
-  Struct1 structFromVec;
   vector<char> buffer;
   origStruct.binSerialize(buffer);
+  Struct1 structFromVec;
   structFromVec.binDeserialize(buffer);
 
   // Serialize to binary file then deserialize
-  Struct1 structFromFile;
   origStruct.binSerializeFile("test2.bin");
+  Struct1 structFromFile;
   structFromFile.binDeserializeFile("test2.bin");
 
   // Compare resulting structures
