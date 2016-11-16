@@ -4,3 +4,10 @@ test.txt
 TestSerialator2
 test2.bin
 *.exe
+Debug
+Release
+x64
+*.opensdf
+*.sdf
+*.suo
+*.vcxproj.user
