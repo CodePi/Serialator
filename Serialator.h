@@ -292,7 +292,7 @@ public:
   void binSerialize   (std::ostream&os);  // serialize to binary stream
   void binDeserialize (std::istream&is);  // deserialize from binary stream
 
-  // Serialize/deserialize to/from char* (deserialize returns size used)
+  // Serialize/deserialize to/from char* (serialize returns size used)
   int  textSerialize  (      char* blob, int maxBlobSize);   
   void textDeserialize(const char* blob, int blobSize); 
   int  binSerialize   (      char* blob, int maxBlobSize);    
