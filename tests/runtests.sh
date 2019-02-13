@@ -2,9 +2,11 @@
 
 set -e
 
+TAG="$1"
+
 echo --------------------------
-echo TestSerialator
-./TestSerialator
+echo ${TAG}TestSerialator
+./${TAG}TestSerialator
 echo --------------------------
-echo TestSerialator2
-./TestSerialator2
+echo ${TAG}TestSerialator2
+./${TAG}TestSerialator2

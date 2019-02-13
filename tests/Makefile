@@ -1,12 +1,13 @@
-all : TestSerialator TestSerialator2
-
 CC=g++
+FLAGS=-std=c++0x -I..
+TARGETS := TestSerialator TestSerialator2
 
-TestSerialator : TestSerialator.cpp ../Serialator.cpp ../Serialator.h Makefile
-	$(CC) TestSerialator.cpp ../Serialator.cpp -o TestSerialator -std=c++0x -I..
+TARGETS := $(patsubst %,$(TAG)%,$(TARGETS))
 
-TestSerialator2 : TestSerialator2.cpp ../Serialator.cpp ../Serialator.h Makefile
-	$(CC) TestSerialator2.cpp ../Serialator.cpp -o TestSerialator2 -std=c++0x -I..
+all : $(TARGETS)
 
-clean: 
-	rm TestSerialator
+$(TAG)% : %.cpp ../Serialator.h
+	$(CC) $< -o $@ $(FLAGS) ../Serialator.cpp
+
+clean:
+	rm -f $(TARGETS)
