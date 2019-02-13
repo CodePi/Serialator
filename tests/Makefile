@@ -6,7 +6,7 @@ TARGETS := $(patsubst %,$(TAG)%,$(TARGETS))
 
 all : $(TARGETS)
 
-$(TAG)% : %.cpp ../Serialator.h
+$(TAG)% : %.cpp ../Serialator.h ../Serialator.cpp
 	$(CC) $< -o $@ $(FLAGS) ../Serialator.cpp
 
 clean:
