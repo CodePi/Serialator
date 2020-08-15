@@ -2,7 +2,7 @@
 #include <fstream>
 #include <string>
 #include <assert.h>
-#include "Serialator.h"
+#include "../Serialator.h"
 
 using namespace std;
 using namespace codepi;

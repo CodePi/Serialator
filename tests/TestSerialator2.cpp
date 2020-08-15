@@ -3,7 +3,7 @@
 #include <map>
 #include <sstream>
 
-#include "Serialator.h"
+#include "../Serialator.h"
 
 using namespace std;
 using namespace codepi;
