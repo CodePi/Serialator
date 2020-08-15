@@ -31,6 +31,7 @@ int main(){
   // populate initial structure
   Struct1 st1; 
   st1.exampleIntValue = 1;
+  st1.exampleFloat = 3.14159;
   st1.exampleString = "an example string";
   st1.exampleVector = { 1, 2, 3 };
 
