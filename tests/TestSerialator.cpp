@@ -221,10 +221,4 @@ int main(){
   }catch(exception&e){
     cerr<<e.what()<<endl;
   }
-
-#ifdef _WIN32
-  cout << "Press enter to exit.\n";
-  getchar();
-#endif
-
 }
